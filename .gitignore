@@ -1,0 +1,9 @@
+# Don't commit the large candidate pool itself to the repo unless required —
+# it's a released hackathon asset, not your own data, and at ~465MB
+# uncompressed it will bloat the repo unnecessarily. Reviewers already have
+# their own copy of candidates.jsonl for Stage 3 reproduction.
+candidates.jsonl
+candidates.jsonl.gz
+__pycache__/
+*.pyc
+.DS_Store

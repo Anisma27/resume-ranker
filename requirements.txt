@@ -1,0 +1,7 @@
+# rank.py uses only the Python standard library: json, csv, argparse, datetime, sys.
+# No third-party dependencies are required to reproduce the submission CSV.
+# Python 3.9+ is assumed (f-strings, standard typing).
+#
+# The sandbox/ demo app has its own, separate dependency list — see sandbox/requirements.txt —
+# since the sandbox UI itself (e.g. Streamlit) is not part of the ranking step
+# and is not subject to the no-network / CPU-only ranking-step constraints.

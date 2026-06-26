@@ -1,0 +1,93 @@
+# Redrob Hackathon — Submission Metadata
+# Filled in from the official submission_metadata_template.yaml.
+# Replace every <FILL_IN> placeholder before submitting.
+
+# ============================================================================
+# Team identity
+# ============================================================================
+team_name: "QuantumSolo"
+
+primary_contact:
+  name: "<FILL_IN: your full name>"
+  email: "<FILL_IN: your email>"
+  phone: "<FILL_IN: your phone, e.g. +91-XXXXXXXXXX>"
+
+team_members:
+  - name: "<FILL_IN: your full name>"
+    email: "<FILL_IN: your email>"
+    role: "Solo participant — ML/Backend"
+
+# ============================================================================
+# Code and reproducibility
+# ============================================================================
+github_repo: "<FILL_IN: https://github.com/Anisma27/YOUR_REPO_NAME>"
+# Push this whole folder to a new repo on your GitHub (github.com/Anisma27)
+# and paste the URL here.
+
+sandbox_link: "<FILL_IN: your HuggingFace Spaces / Streamlit Cloud URL>"
+# See sandbox/ folder in this repo for a ready-to-deploy Streamlit app.
+
+reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
+
+# ============================================================================
+# Compute environment
+# ============================================================================
+compute:
+  platform: "<FILL_IN: e.g. HP laptop, Windows 11>"
+  cpu_cores: "<FILL_IN: run `python -c \"import os; print(os.cpu_count())\"`>"
+  ram_gb: "<FILL_IN: your laptop's RAM>"
+  python_version: "<FILL_IN: run `python --version`>"
+  os: "<FILL_IN: e.g. Windows 11>"
+  uses_gpu_for_inference: false
+  has_network_during_ranking: false
+  pre_computation_required: false
+  pre_computation_time_minutes: 0
+
+# ============================================================================
+# AI tools declaration
+# ============================================================================
+ai_tools_used:
+  - "Claude"
+
+ai_usage_summary: |
+  Used Claude (Anthropic) throughout development: to explore the released
+  candidate dataset's actual statistical distributions (title frequency,
+  skill-duration patterns between ML-titled and non-ML-titled candidates,
+  company tiers, honeypot-style profile inconsistencies) before any scoring
+  logic was written, to help design and review the rule-based scoring
+  function in rank.py, and to draft this documentation. No candidate data
+  was sent to any external API as part of the ranking step itself — rank.py
+  runs entirely locally with zero network access, using only the Python
+  standard library. All scoring weights and thresholds were derived from the
+  job description text and from inspecting the actual dataset distributions,
+  not invented arbitrarily.
+
+# ============================================================================
+# Approach summary
+# ============================================================================
+methodology_summary: |
+  Pure rule-based ranker, zero ML/embeddings/LLM calls, stdlib-only Python.
+  Five weighted fit axes (skills 0.38, title 0.27, experience 0.15, company
+  pedigree 0.12, location 0.08) combined multiplicatively with a behavioral-
+  availability factor (recency, response rate, open-to-work, interview
+  completion). Skills scoring uses a proficiency x duration "trust" curve
+  plus career-history corroboration to discount keyword-stuffed skill
+  claims — the dataset shows non-ML-titled candidates list core AI buzzwords
+  almost as often as genuine ML candidates, but with roughly half the
+  average claimed duration. Hard disqualifiers (consulting-only career,
+  pure-academic-research career, off-domain technical title) floor the
+  score near zero. A separate implausibility check soft-penalizes profiles
+  with internally inconsistent claims (e.g. a skill duration exceeding total
+  years of experience, or "expert" proficiency claimed with zero months of
+  use) to keep honeypot exposure in the top 100 low. Runtime ~9 seconds and
+  ~80MB peak memory for the full 100K pool on a single CPU core, no network.
+
+# ============================================================================
+# Declarations
+# ============================================================================
+declarations:
+  read_submission_spec: true
+  code_is_original_work: true
+  no_collusion: true
+  honeypot_check_done: true
+  reproduction_tested: true
