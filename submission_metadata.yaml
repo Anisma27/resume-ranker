@@ -1,6 +1,5 @@
 # Redrob Hackathon — Submission Metadata
 # Filled in from the official submission_metadata_template.yaml.
-# Replace every <FILL_IN> placeholder before submitting.
 
 # ============================================================================
 # Team identity
@@ -8,24 +7,21 @@
 team_name: "QuantumSolo"
 
 primary_contact:
-  name: "<FILL_IN: your full name>"
-  email: "<FILL_IN: your email>"
-  phone: "<FILL_IN: your phone, e.g. +91-XXXXXXXXXX>"
+  name: "Anisma A"
+  email: "anismaa002@gmail.com"
+  phone: "+91-9345166740"
 
 team_members:
-  - name: "<FILL_IN: your full name>"
-    email: "<FILL_IN: your email>"
+  - name: "Anisma A"
+    email: "anismaa002@gmail.com"
     role: "Solo participant — ML/Backend"
 
 # ============================================================================
 # Code and reproducibility
 # ============================================================================
-github_repo: "<FILL_IN: https://github.com/Anisma27/YOUR_REPO_NAME>"
-# Push this whole folder to a new repo on your GitHub (github.com/Anisma27)
-# and paste the URL here.
+github_repo: "https://github.com/Anisma27/resume-ranker"
 
-sandbox_link: "<FILL_IN: your HuggingFace Spaces / Streamlit Cloud URL>"
-# See sandbox/ folder in this repo for a ready-to-deploy Streamlit app.
+sandbox_link: "https://resume-ranker-drvmmvus2dccc6qjbb4e4h.streamlit.app/"
 
 reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
 
@@ -33,11 +29,11 @@ reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submi
 # Compute environment
 # ============================================================================
 compute:
-  platform: "<FILL_IN: e.g. HP laptop, Windows 11>"
-  cpu_cores: "<FILL_IN: run `python -c \"import os; print(os.cpu_count())\"`>"
-  ram_gb: "<FILL_IN: your laptop's RAM>"
-  python_version: "<FILL_IN: run `python --version`>"
-  os: "<FILL_IN: e.g. Windows 11>"
+  platform: "HP laptop"
+  cpu_cores: 12
+  ram_gb: 16
+  python_version: "3.10.11"
+  os: "Windows"
   uses_gpu_for_inference: false
   has_network_during_ranking: false
   pre_computation_required: false
@@ -79,7 +75,7 @@ methodology_summary: |
   score near zero. A separate implausibility check soft-penalizes profiles
   with internally inconsistent claims (e.g. a skill duration exceeding total
   years of experience, or "expert" proficiency claimed with zero months of
-  use) to keep honeypot exposure in the top 100 low. Runtime ~9 seconds and
+  use) to keep honeypot exposure in the top 100 low. Runtime ~10 seconds and
   ~80MB peak memory for the full 100K pool on a single CPU core, no network.
 
 # ============================================================================
