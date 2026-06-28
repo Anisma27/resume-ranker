@@ -286,7 +286,7 @@ if run:
             "title": profile.get("current_title", "—"),
             "company": profile.get("current_company", "—"),
             "years": profile.get("years_of_experience", "—"),
-            "location": profile.get("location", {}).get("city", "—") + ", " + profile.get("location", {}).get("state", ""),
+            "location": profile.get("location", "—") if isinstance(profile.get("location"), str) else (profile.get("location") or {}).get("city", "—"),
             "score": round(score, 4),
             "reasoning": reasoning,
         })
