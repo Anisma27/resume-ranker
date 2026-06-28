@@ -23,7 +23,7 @@ github_repo: "https://github.com/Anisma27/resume-ranker"
 
 sandbox_link: "https://resume-ranker-drvmmvus2dccc6qjbb4e4h.streamlit.app/"
 
-reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
+reproduce_command: "pip install -r requirements.txt && python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
 
 # ============================================================================
 # Compute environment
@@ -50,33 +50,32 @@ ai_usage_summary: |
   candidate dataset's actual statistical distributions (title frequency,
   skill-duration patterns between ML-titled and non-ML-titled candidates,
   company tiers, honeypot-style profile inconsistencies) before any scoring
-  logic was written, to help design and review the rule-based scoring
-  function in rank.py, and to draft this documentation. No candidate data
-  was sent to any external API as part of the ranking step itself — rank.py
-  runs entirely locally with zero network access, using only the Python
-  standard library. All scoring weights and thresholds were derived from the
-  job description text and from inspecting the actual dataset distributions,
-  not invented arbitrarily.
+  logic was written, to help design and review the hybrid scoring function
+  in rank.py and semantic.py, and to draft this documentation. No candidate
+  data was sent to any external API as part of the ranking step itself —
+  rank.py and semantic.py run entirely locally with zero network access,
+  using Python with scikit-learn and numpy only (no LLMs, no embeddings
+  API, no GPU). All scoring weights, thresholds, and the TF-IDF reference
+  narrative were derived from reading the job description and inspecting
+  actual dataset distributions — not invented arbitrarily.
 
 # ============================================================================
 # Approach summary
 # ============================================================================
 methodology_summary: |
-  Pure rule-based ranker, zero ML/embeddings/LLM calls, stdlib-only Python.
-  Five weighted fit axes (skills 0.38, title 0.27, experience 0.15, company
-  pedigree 0.12, location 0.08) combined multiplicatively with a behavioral-
-  availability factor (recency, response rate, open-to-work, interview
-  completion). Skills scoring uses a proficiency x duration "trust" curve
-  plus career-history corroboration to discount keyword-stuffed skill
-  claims — the dataset shows non-ML-titled candidates list core AI buzzwords
-  almost as often as genuine ML candidates, but with roughly half the
-  average claimed duration. Hard disqualifiers (consulting-only career,
-  pure-academic-research career, off-domain technical title) floor the
-  score near zero. A separate implausibility check soft-penalizes profiles
-  with internally inconsistent claims (e.g. a skill duration exceeding total
-  years of experience, or "expert" proficiency claimed with zero months of
-  use) to keep honeypot exposure in the top 100 low. Runtime ~10 seconds and
-  ~80MB peak memory for the full 100K pool on a single CPU core, no network.
+  Hybrid rule-based + TF-IDF semantic ranker. Six weighted fit axes (skills
+  0.342, title 0.243, experience 0.135, company pedigree 0.108, location
+  0.072, semantic similarity 0.10) combined multiplicatively with a
+  behavioral-availability factor (recency, response rate, open-to-work,
+  interview completion). Skills scoring uses a proficiency x duration "trust"
+  curve plus career-history corroboration to discount keyword-stuffed skill
+  claims. Semantic signal uses TF-IDF over candidate free text (summary +
+  career history + skill names) vs. a JD reference narrative — catching
+  candidates who demonstrate fit without using exact keywords. Hard
+  disqualifiers floor consulting-only, pure-academic, and off-domain
+  profiles near zero. Implausibility check soft-penalizes honeypot-style
+  profiles. Runtime ~37 seconds and ~3GB peak memory for the full 100K
+  pool on a single CPU core, no network, no GPU.
 
 # ============================================================================
 # Declarations
