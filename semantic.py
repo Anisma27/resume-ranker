@@ -100,7 +100,8 @@ def _candidate_text(candidate):
             parts.append(desc)
 
     skill_names = " ".join(
-        s.get("name", "") for s in candidate.get("skills", []) if s.get("name")
+    (s.get("name", "") if isinstance(s, dict) else str(s))
+    for s in candidate.get("skills", [])
     )
     if skill_names:
         parts.append(skill_names)
