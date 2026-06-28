@@ -76,7 +76,7 @@ latency constraints.
 """
 
 
-def _candidate_text(candidate: dict) -> str:
+def _candidate_text(candidate):
     """
     Build a single free-text string from all the narrative fields we want
     semantic similarity to cover.  We use:
@@ -108,7 +108,7 @@ def _candidate_text(candidate: dict) -> str:
     return " ".join(parts)
 
 
-def build_tfidf_index(candidates: list[dict]):
+def build_tfidf_index(candidates):
     """
     Fit a TF-IDF vectorizer on all candidate free-text fields plus the JD
     reference narrative, then return the (vectorizer, candidate_matrix,
@@ -157,7 +157,7 @@ def build_tfidf_index(candidates: list[dict]):
     return vectorizer, cand_matrix, jd_vector
 
 
-def semantic_scores(cand_matrix, jd_vector) -> np.ndarray:
+def semantic_scores(cand_matrix, jd_vector):
     """
     Compute cosine similarity of every candidate against the JD narrative.
 
