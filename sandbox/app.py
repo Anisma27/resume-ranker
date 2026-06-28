@@ -19,15 +19,15 @@ from pathlib import Path
 
 import streamlit as st
 
-# Make rank.py (one directory up) importable.
+# Make rank.py and semantic.py (one directory up) importable.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from rank import score_candidate  # noqa: E402
+from rank import score_candidates  # noqa: E402
 
 st.set_page_config(page_title="Redrob Ranker — Sandbox", layout="wide")
 
 st.title("Redrob Hackathon — Candidate Ranker Sandbox")
 st.caption(
-    "Team QuantumSolo · Pure rule-based ranker, stdlib-only, CPU, no network. "
+    "Team QuantumSolo · Hybrid rule-based + TF-IDF semantic ranker, CPU, no network. "
     "Upload a small candidate sample (JSON list or JSONL) or use the bundled "
     "sample to see the ranker run end-to-end."
 )
@@ -40,7 +40,6 @@ def load_candidates(uploaded_file):
     content_stripped = content.strip()
     if content_stripped.startswith("["):
         return json.loads(content_stripped)
-    # otherwise assume JSONL
     return [json.loads(line) for line in content_stripped.splitlines() if line.strip()]
 
 
@@ -61,20 +60,24 @@ if st.button("Run ranker", type="primary"):
     import time
 
     start = time.time()
-    scored = []
-    for c in candidates:
-        score, reasoning = score_candidate(c)
-        scored.append(
-            {
-                "candidate_id": c["candidate_id"],
-                "title": c["profile"]["current_title"],
-                "years_of_experience": c["profile"]["years_of_experience"],
-                "company": c["profile"]["current_company"],
-                "score": round(score, 4),
-                "reasoning": reasoning,
-            }
-        )
+
+    with st.spinner("Building TF-IDF index and scoring candidates..."):
+        results = score_candidates(candidates)
+
     elapsed = time.time() - start
+
+    scored = []
+    for cid, score, reasoning in results:
+        # find the matching candidate for display fields
+        c = next(x for x in candidates if x["candidate_id"] == cid)
+        scored.append({
+            "candidate_id": cid,
+            "title": c["profile"]["current_title"],
+            "years_of_experience": c["profile"]["years_of_experience"],
+            "company": c["profile"]["current_company"],
+            "score": round(score, 4),
+            "reasoning": reasoning,
+        })
 
     scored.sort(key=lambda x: (-x["score"], x["candidate_id"]))
 
@@ -96,8 +99,8 @@ if st.button("Run ranker", type="primary"):
 
 st.divider()
 st.caption(
-    "Full code: rank.py at the repo root. The full 100,000-candidate "
+    "Full code: rank.py + semantic.py at the repo root. The full 100,000-candidate "
     "submission was produced locally with: "
     "`python rank.py --candidates ./candidates.jsonl --out ./submission.csv` "
-    "— ~9 seconds, ~80MB peak memory, zero network calls."
+    "— ~37 seconds, ~3GB peak memory, zero network calls."
 )
